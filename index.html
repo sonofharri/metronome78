@@ -122,8 +122,14 @@ function waitBPM() {
 		setTimeout(function() {
 			if (playing) {
 				let a = new Audio("metronome.mp3");
+				//a.crossOrigin = "anonymous";
+				let context = new AudioContext();
+				let source = context.createMediaElementSource(a);
+				let g = context.createGain();
+				g.gain.value = volume;
+				source.connect(g);
+				g.connect(context.destination);
 				a.play();
-				a.volume = volume;
 				note++;
 				if (note == 3) offnote = true;
 				if (note == 4) {offnote = false; note = 1;}
@@ -143,13 +149,13 @@ function waitBPM() {
 		<div class="bpmbox">
 			<img src="icons/note.png"></img><text class="smoltext"> = </text><text id="bpm" class="bpm" contenteditable="true">130</text><br>
 		</div>
-		<button class="circle" type="button" onclick="volume-=0.5;">
+		<button class="circle" type="button" onclick="volume-=0.1;">
 			<img src="icons/voldown.png" id="voldownimg"></img>
 		</button>
 		<button class="circle" type="button" onclick="playing=!playing;waitBPM();updateImage();">
 			<img src="icons/play.png" id="buttonimg"></img>
 		</button>
-		<button class="circle" type="button" onclick="volume+=0.5;">
+		<button class="circle" type="button" onclick="volume+=0.1;">
 			<img src="icons/volup.png" id="volupimg"></img>
 		</button>
 	</div>
