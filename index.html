@@ -157,6 +157,7 @@ function waitBPM() {
 				source.connect(g);
 				g.connect(context.destination);
 				a.play();
+				a.remove();
 
 				if (flash) {
 					fade();
