@@ -149,13 +149,13 @@ function waitBPM() {
 	if (playing) {
 		setTimeout(function() {
 			if (playing) {
-				var context = this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); // new AudioContext();
 				let a = new Audio("metronome.mp3");
+				/*var context = this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); // new AudioContext();
 				let source = context.createMediaElementSource(a);
 				let g = context.createGain();
 				g.gain.value = volume;
 				source.connect(g);
-				g.connect(context.destination);
+				g.connect(context.destination);*/
 				a.play();
 				a.remove();
 
