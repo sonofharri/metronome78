@@ -70,6 +70,22 @@
 			background-color: #222;
 		}
 
+		.disableflash {
+			border: 1px solid #181818;
+			transition-duration: 0.25s;
+			padding: 0px;
+			color: white;
+			font-family: "Nunito Sans", sans-serif;
+			cursor:pointer;
+			width:90px;
+			height:30px;
+			position: absolute;
+			bottom: 10px;
+			right: 10px;
+			border-radius: 10%;
+			background-color: #333;
+		}
+
 		.circle:hover {
 			transition-duration: 0.25s;
 			border: 1px solid #ffffff;
@@ -94,6 +110,8 @@
 		
 var volume = 1;
 var note = 0;
+var rgb = 101;
+var flash = true;
 var offnote = false;
 var bpm = 130;
 var playing = false;
@@ -117,12 +135,21 @@ function checkKey(e) {
 	
 }
 
+function fade() {
+	for (let i = 0; i < 51; i++) {
+		setTimeout(function() {
+			document.getElementById("box").style.backgroundColor = "rgb(" + rgb + ", " + rgb + ", " + rgb + ")";
+			rgb--;
+		}, i * (1200/bpm));
+	}
+}
+
 function waitBPM() {
 	if (playing) {
 		setTimeout(function() {
 			if (playing) {
+
 				let a = new Audio("metronome.mp3");
-				//a.crossOrigin = "anonymous";
 				let context = new AudioContext();
 				let source = context.createMediaElementSource(a);
 				let g = context.createGain();
@@ -130,11 +157,20 @@ function waitBPM() {
 				source.connect(g);
 				g.connect(context.destination);
 				a.play();
+
+				if (flash) {
+					fade();
+					rgb = 101;
+					document.getElementById("box").style.backgroundColor = "#666";
+				} else document.getElementById("box").style.backgroundColor = "#333";
+				
+
 				note++;
 				if (note == 3) offnote = true;
 				if (note == 4) {offnote = false; note = 1;}
 				//console.log(note + " | " + (60000/bpm + ((offnote) ? 30000/bpm : 0)) );
 				waitBPM();
+
 			}
 		}, 60000/bpm + ((offnote) ? 30000/bpm : 0)  );
 	}
@@ -144,19 +180,22 @@ function waitBPM() {
 
 
 
-	<div class="box">
-		<u>7/8 Metronome</u><br>
+	<div class="box" id="box">
+		🍌 <strong><u>Metronome in 7/8</u></strong> 🍌<br>
 		<div class="bpmbox">
 			<img src="icons/note.png"></img><text class="smoltext"> = </text><text id="bpm" class="bpm" contenteditable="true">130</text><br>
 		</div>
-		<button class="circle" type="button" onclick="volume-=0.1;">
+		<button class="circle" type="button" onclick="volume-=0.25;">
 			<img src="icons/voldown.png" id="voldownimg"></img>
 		</button>
 		<button class="circle" type="button" onclick="playing=!playing;waitBPM();updateImage();">
 			<img src="icons/play.png" id="buttonimg"></img>
 		</button>
-		<button class="circle" type="button" onclick="volume+=0.1;">
+		<button class="circle" type="button" onclick="volume+=0.25;">
 			<img src="icons/volup.png" id="volupimg"></img>
+		</button>
+		<button class="disableflash" type="button" onclick="flash=!flash;">
+			Toggle Flash
 		</button>
 	</div>
 
