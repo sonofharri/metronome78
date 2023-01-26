@@ -31,6 +31,34 @@
 			color: #ffffff;
 			margin: auto;
 		}
+		
+		.bpmleft {
+			border: 1px solid #181818;
+			transition-duration: 0.25s;
+			padding: 0px;
+			cursor:pointer;
+			margin: auto;
+			width:40px;
+			height:40px;
+			border-radius: 50% 10% 10% 50%;
+			background-color: #2a2a2a;
+		}
+		.bpmright {
+			border: 1px solid #181818;
+			transition-duration: 0.25s;
+			padding: 0px;
+			cursor:pointer;
+			margin: auto;
+			width:40px;
+			height:40px;
+			border-radius: 10% 50% 50% 10%;
+			background-color: #2a2a2a;
+		}
+		
+		.smallimage {
+			width: 100%;
+			height: 100%;
+		}
 
 		.bpm {
 			font-size: 1cm;
@@ -52,10 +80,10 @@
 
 		.bpmbox {
 			border: 1px solid #333;
-			width:200px;
+			width:300px;
 			margin:auto;
 			background-color: #222;
-			margin-bottom: 0.5cm;
+			margin-bottom: 0px;
 			border-radius: 10px;
 		}
 
@@ -117,6 +145,18 @@ var offnote = false;
 var bpm = 130;
 var playing = false;
 
+function updateBPM() {
+	if (bpm <= 30) {
+		document.getElementById("arrleft").style.opacity = 0.5;
+		bpm = 30;
+	} else document.getElementById("arrleft").style.opacity = 1;
+	if (bpm >= 300) {
+		document.getElementById("arrright").style.opacity = 0.5;
+		bpm = 300;
+	} else document.getElementById("arrright").style.opacity = 1;
+	if (document.getElementById("bpm").innerHTML != String(bpm)) document.getElementById("bpm").innerHTML = String(bpm);
+}
+
 function updateImage() {
 	if (playing) document.getElementById("buttonimg").src = "icons/pause.png";
 	else document.getElementById("buttonimg").src = "icons/play.png";
@@ -124,13 +164,15 @@ function updateImage() {
 	offnote=false;
 }
 
+document.onclick = updateBPM;
+
+
 document.onkeyup = checkKey;
 
 function checkKey(e) {	
 	bpm = parseInt(document.getElementById("bpm").innerHTML);
-	if (String(bpm).split("").length > 3) {
-		document.getElementById("bpm").innerHTML = String(bpm).split("")[0] + String(bpm).split("")[1] + String(bpm).split("")[2];
-	}
+	//if (String(bpm).split("").length > 3) document.getElementById("bpm").innerHTML = String(bpm).split("")[0] + String(bpm).split("")[1] + String(bpm).split("")[2];
+	
 	if (isNaN(bpm)) {document.getElementById("bpm").style.backgroundColor = "#ff0000";bpm=130}
 	else document.getElementById("bpm").style.backgroundColor = "#151515";
 	
@@ -162,6 +204,7 @@ function cvol(dir) {
 }
 
 function waitBPM() {
+	updateBPM();
 	if (playing) {
 		setTimeout(function() {
 			if (playing) {
@@ -201,8 +244,18 @@ function waitBPM() {
 	<div class="box" id="box">
 		🍌 <strong><u>Metronome in 7/8</u></strong> 🍌<br>
 		<div class="bpmbox">
-			<img src="icons/note.png"></img><text class="smoltext"> = </text><text id="bpm" class="bpm" contenteditable="true">130</text><br>
+			<button class="bpmleft" type="button" onmousedown="bpm--;updateBPM();">
+				<img src="icons/remove.png" class="smallimage" id="arrleft"></img>
+			</button>
+			<img src="icons/note.png"></img><text class="smoltext"> = </text><text id="bpm" class="bpm" contenteditable="true">130</text>
+			<button class="bpmright" type="button" onmousedown="bpm++;updateBPM();">
+				<img src="icons/add.png" class="smallimage" id="arrright"></img>
+			</button><br>
 		</div>
+		
+		
+		
+		
 		<button class="circle" type="button" onclick="cvol(0);">
 			<img src="icons/voldown.png" id="voldownimg"></img>
 		</button>
@@ -212,6 +265,9 @@ function waitBPM() {
 		<button class="circle" type="button" onclick="cvol(1);">
 			<img src="icons/volup.png" id="volupimg"></img>
 		</button>
+		
+		
+		
 		<button class="disableflash" type="button" onclick="flash=!flash;">
 			Toggle Flash
 		</button>
