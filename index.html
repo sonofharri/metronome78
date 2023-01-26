@@ -145,13 +145,13 @@ function fade() {
 	}
 }
 
+var context = this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); // new AudioContext();
 function waitBPM() {
 	if (playing) {
 		setTimeout(function() {
 			if (playing) {
 
 				let a = new Audio("metronome.mp3");
-				let context = new AudioContext();
 				let source = context.createMediaElementSource(a);
 				let g = context.createGain();
 				g.gain.value = volume;
